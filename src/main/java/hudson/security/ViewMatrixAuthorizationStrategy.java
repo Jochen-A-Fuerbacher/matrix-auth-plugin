@@ -23,9 +23,6 @@
  */
 package hudson.security;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.jenkinsci.plugins.matrixauth.Messages;
 
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -35,14 +32,11 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 import hudson.Extension;
 import hudson.model.Descriptor;
-import hudson.model.Job;
 import hudson.model.View;
 import hudson.model.ViewProperty;
 import hudson.security.ACL;
 import hudson.security.GlobalMatrixAuthorizationStrategy;
-import hudson.security.GlobalMatrixAuthorizationStrategy.DescriptorImpl;
 import hudson.util.RobustReflectionConverter;
-import jenkins.model.Jenkins;
 
 public class ViewMatrixAuthorizationStrategy extends GlobalMatrixAuthorizationStrategy {
     

@@ -177,15 +177,10 @@ public class ViewAuthorizationMatrixProperty extends ViewProperty {
             return p.getEnabled() && p.isContainedBy(PermissionScope.VIEW);
         }
 
-        public FormValidation doCheckName(View view, @QueryParameter String value) throws IOException, ServletException {
-                       
-            //findViewFromRequest(ViewAuthorizationMatrixProperty.DescriptorImpl.class);
-                        
-            String referer = Stapler.getCurrentRequest().getReferer();
-            String viewname1 = referer.substring(0, referer.lastIndexOf("/"));
-            String viewname2 = viewname1.substring(viewname1.lastIndexOf("/")+1);
-                 
-            return GlobalMatrixAuthorizationStrategy.DESCRIPTOR.doCheckName_(value, Jenkins.getActiveInstance().getView(viewname2), View.CONFIGURE);
+        public FormValidation doCheckName(@QueryParameter String value) throws IOException, ServletException {
+                                                          
+            View view = findViewFromRequest(View.class);
+            return GlobalMatrixAuthorizationStrategy.DESCRIPTOR.doCheckName_(value, view, View.CONFIGURE);
         }
         
         static @CheckForNull String viewFromReferer(@Nonnull String referer) {
