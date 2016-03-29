@@ -45,8 +45,6 @@ import javax.servlet.ServletException;
 
 import org.acegisecurity.acls.sid.Sid;
 import org.jenkinsci.plugins.matrixauth.Messages;
-import org.kohsuke.stapler.Ancestor;
-import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
@@ -57,11 +55,8 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-//import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
-import hudson.diagnosis.OldDataMonitor;
 import hudson.model.Item;
-import hudson.model.Job;
 import hudson.model.View;
 import hudson.model.ViewProperty;
 import hudson.model.ViewPropertyDescriptor;

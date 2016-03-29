@@ -26,6 +26,8 @@ package hudson.security;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jenkinsci.plugins.matrixauth.Messages;
+
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -33,43 +35,45 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 import hudson.Extension;
 import hudson.model.Descriptor;
+import hudson.model.Job;
 import hudson.model.View;
 import hudson.model.ViewProperty;
 import hudson.security.ACL;
-import hudson.security.AuthorizationStrategy;
 import hudson.security.GlobalMatrixAuthorizationStrategy;
+import hudson.security.GlobalMatrixAuthorizationStrategy.DescriptorImpl;
 import hudson.util.RobustReflectionConverter;
 import jenkins.model.Jenkins;
-import org.jenkinsci.plugins.matrixauth.Messages;
 
 public class ViewMatrixAuthorizationStrategy extends GlobalMatrixAuthorizationStrategy {
-   
+    
     @Override
-    public Set<String> getGroups() {
-        System.out.println("getGroups() called.");
-        Set<String> r = new HashSet<String>();
-        r.addAll(super.getGroups());
-        
-        for(View view : Jenkins.getActiveInstance().getViews()){
-            for(ViewProperty prop : view.getProperties()){
-                if(prop!= null && prop instanceof ViewAuthorizationMatrixProperty){
-                    r.addAll(((ViewAuthorizationMatrixProperty) prop).getGroups());
+    public ACL getACL(View view) {        
+        for(ViewProperty prop : view.getProperties()){
+            if(prop != null && prop instanceof ViewAuthorizationMatrixProperty){
+                
+                ViewAuthorizationMatrixProperty vamp = (ViewAuthorizationMatrixProperty) prop;
+                SidACL viewAcl = vamp.getACL();
+                
+                if(vamp.isBlocksInheritance()){
+                    return viewAcl;
                 }
             }
         }
-        return r;
+        return getRootACL();
     }
     
-    @Override
-    public ACL getACL(View view) {
-        for(ViewProperty prop : view.getProperties()){
-            if(prop != null && prop instanceof ViewAuthorizationMatrixProperty){
-                return ((ViewAuthorizationMatrixProperty) prop).getACL();
-                
-            }
+    @Extension
+    public static final Descriptor<AuthorizationStrategy> DESCRIPTOR = new DescriptorImpl() {
+        @Override
+        protected GlobalMatrixAuthorizationStrategy create() {
+            return new ViewMatrixAuthorizationStrategy();
         }
-        return null;
-    }
+
+        @Override
+        public String getDisplayName() {
+            return Messages.ViewMatrixAuthorizationStrategy_DisplayName();
+        }
+    };
 
     public static class ConverterImpl extends GlobalMatrixAuthorizationStrategy.ConverterImpl {
         private RobustReflectionConverter ref;
