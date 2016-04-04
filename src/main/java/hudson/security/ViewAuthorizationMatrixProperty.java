@@ -57,6 +57,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import hudson.Extension;
 import hudson.model.Item;
+import hudson.model.Job;
 import hudson.model.View;
 import hudson.model.ViewProperty;
 import hudson.model.ViewPropertyDescriptor;
@@ -128,6 +129,14 @@ public class ViewAuthorizationMatrixProperty extends ViewProperty {
         @Override
         public String getDisplayName() {
             return Messages.ViewMatrixAuthorizationStrategy_DisplayName();
+        }
+        
+        @Override
+        public boolean isEnabledFor(View view) {
+            // only enabled when ViewMatrixAuthorizationStrategy is in
+            // charge
+            return Jenkins.getInstanceOrNull()
+                    .getAuthorizationStrategy() instanceof ViewMatrixAuthorizationStrategy;
         }
         
         @Override
