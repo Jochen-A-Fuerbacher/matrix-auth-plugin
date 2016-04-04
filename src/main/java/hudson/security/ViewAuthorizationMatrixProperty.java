@@ -57,7 +57,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import hudson.Extension;
 import hudson.model.Item;
-import hudson.model.Job;
 import hudson.model.View;
 import hudson.model.ViewProperty;
 import hudson.model.ViewPropertyDescriptor;
